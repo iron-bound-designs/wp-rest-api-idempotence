@@ -34,6 +34,9 @@ final class Middleware {
 	/** @var Config */
 	private $config;
 
+	/** @var \SplObjectStorage */
+	private $request_key_map;
+
 	/**
 	 * Middleware constructor.
 	 *
@@ -47,6 +50,8 @@ final class Middleware {
 		$this->poller     = $poller;
 		$this->factory    = $factory;
 		$this->config     = $config;
+
+		$this->request_key_map = new \SplObjectStorage();
 	}
 
 	/**
@@ -54,9 +59,19 @@ final class Middleware {
 	 *
 	 * @since 1.0.0
 	 */
-	public function filters() {
+	public function initialize() {
 		add_filter( 'rest_pre_dispatch', [ $this, 'pre_dispatch' ], 0, 3 );
 		add_filter( 'rest_post_dispatch', [ $this, 'post_dispatch' ], 100, 3 );
+	}
+
+	/**
+	 * Unregister the filters.
+	 *
+	 * @since 1.0.0
+	 */
+	public function deinitialize() {
+		remove_filter( 'rest_pre_dispatch', [ $this, 'pre_dispatch' ], 0 );
+		remove_filter( 'rest_post_dispatch', [ $this, 'post_dispatch' ], 100 );
 	}
 
 	/**
@@ -85,6 +100,8 @@ final class Middleware {
 		if ( ! $idempotency_key ) {
 			return null;
 		}
+
+		$this->request_key_map[ $request ] = $idempotency_key;
 
 		$user = wp_get_current_user() ?: null;
 
@@ -133,10 +150,14 @@ final class Middleware {
 			return $response;
 		}
 
-		$idempotency_key = $this->extract_idempotency_key( $request );
+		if ( $this->request_key_map->contains( $request ) ) {
+			$idempotency_key = $this->request_key_map[ $request ];
+		} else {
+			$idempotency_key = $this->extract_idempotency_key( $request );
 
-		if ( ! $idempotency_key ) {
-			return $response;
+			if ( ! $idempotency_key ) {
+				return $response;
+			}
 		}
 
 		$user = wp_get_current_user() ?: null;
@@ -162,8 +183,9 @@ final class Middleware {
 
 		switch ( $this->config->get_key_location() ) {
 			case Config::LOCATION_HEADER:
-				$key = $request->get_header( "X-{$this->config->get_key_name()}" );
-				$request->remove_header( "X-{$this->config->get_key_name()}" );
+				$header = "X-{$this->config->get_key_name()}";
+				$key    = $request->get_header( $header );
+				$request->remove_header( $request::canonicalize_header_name( $header ) );
 				break;
 			case Config::LOCATION_BODY:
 				$key = $request->get_param( $this->config->get_key_name() );

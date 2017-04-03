@@ -38,7 +38,7 @@ do_action( 'wp_api_idempotence_initialize_container', $container );
 
 /** @var \IronBound\WP_API_Idempotence\Middleware $middleware */
 $middleware = $container->make( '\IronBound\WP_API_Idempotence\Middleware' );
-$middleware->filters();
+$middleware->initialize();
 
 register_activation_hook( WP_API_IDEMPOTENCE_FILE, function () use ( $container ) {
 

@@ -42,3 +42,5 @@ $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 require_once __DIR__ . '/../vendor/autoload.php';
 
 ini_set( 'xdebug.max_nesting_level', 250 );
+
+require $test_root . '/includes/bootstrap.php';
