@@ -15,7 +15,7 @@ namespace IronBound\WP_API_Idempotence;
  *
  * @package IronBound\WP_API_Idempotence
  */
-class IdempotentRequest {
+final class IdempotentRequest {
 
 	/** @var string */
 	private $idempotent_key;
@@ -35,12 +35,12 @@ class IdempotentRequest {
 	/**
 	 * IdempotentRequest constructor.
 	 *
-	 * @param string           $idempotent_key
+	 * @param string           $idempotency_key
 	 * @param \WP_REST_Request $request
 	 * @param \WP_User|null    $user
 	 */
-	public function __construct( $idempotent_key, \WP_REST_Request $request, \WP_User $user = null ) {
-		$this->idempotent_key = $idempotent_key;
+	public function __construct( $idempotency_key, \WP_REST_Request $request, \WP_User $user = null ) {
+		$this->idempotent_key = $idempotency_key;
 		$this->request        = $request;
 		$this->user           = $user;
 	}
@@ -52,7 +52,7 @@ class IdempotentRequest {
 	 *
 	 * @return string
 	 */
-	public function get_idempotent_key() {
+	public function get_idempotency_key() {
 		return $this->idempotent_key;
 	}
 

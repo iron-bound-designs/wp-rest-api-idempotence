@@ -20,10 +20,7 @@ use IronBound\WP_API_Idempotence\RequestPoller\RequestPoller;
  *
  * @package IronBound\WP_API_Idempotence
  */
-class Middleware {
-
-	/** @var Config */
-	private $config;
+final class Middleware {
 
 	/** @var DataStore */
 	private $data_store;
@@ -31,17 +28,25 @@ class Middleware {
 	/** @var RequestPoller */
 	private $poller;
 
+	/** @var IdempotentRequestFactory */
+	private $factory;
+
+	/** @var Config */
+	private $config;
+
 	/**
 	 * Middleware constructor.
 	 *
-	 * @param RequestPoller $poller
-	 * @param DataStore     $data_store
-	 * @param Config        $config
+	 * @param RequestPoller            $poller
+	 * @param DataStore                $data_store
+	 * @param IdempotentRequestFactory $factory
+	 * @param Config                   $config
 	 */
-	public function __construct( RequestPoller $poller, DataStore $data_store, Config $config ) {
-		$this->config     = $config;
+	public function __construct( RequestPoller $poller, DataStore $data_store, IdempotentRequestFactory $factory, Config $config ) {
 		$this->data_store = $data_store;
 		$this->poller     = $poller;
+		$this->factory    = $factory;
+		$this->config     = $config;
 	}
 
 	/**
@@ -83,7 +88,7 @@ class Middleware {
 
 		$user = wp_get_current_user() ?: null;
 
-		$idempotent_request = new IdempotentRequest( $idempotence_key, $request, $user );
+		$idempotent_request = $this->factory->make( $idempotence_key, $request, $user );
 
 		try {
 
@@ -136,7 +141,7 @@ class Middleware {
 
 		$user = wp_get_current_user() ?: null;
 
-		$idempotent_request = new IdempotentRequest( $idempotence_key, $request, $user );
+		$idempotent_request = $this->factory->make( $idempotence_key, $request, $user );
 		$idempotent_request->set_response( $response );
 
 		$this->data_store->finish( $idempotent_request );

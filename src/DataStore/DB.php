@@ -78,7 +78,7 @@ final class DB implements DataStore, Installable, Configurable {
 	public function start( IdempotentRequest $request ) {
 		Model::create( array(
 			'user'         => $request->get_user() ? $request->get_user()->ID : 0,
-			'ikey'         => $request->get_idempotent_key(),
+			'ikey'         => $request->get_idempotency_key(),
 			'request_hash' => $this->request_hasher->hash( $request ),
 			'method'       => $request->get_request()->get_method(),
 		) );
@@ -163,7 +163,7 @@ final class DB implements DataStore, Installable, Configurable {
 		/** @noinspection PhpIncompatibleReturnTypeInspection */
 		return Model::query()->where( [
 			'user' => $request->get_user() ? $request->get_user()->ID : 0,
-			'ikey' => $request->get_idempotent_key(),
+			'ikey' => $request->get_idempotency_key(),
 		] )->first() ?: null;
 	}
 
