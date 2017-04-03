@@ -264,6 +264,8 @@ class TestMiddleware extends TestCase {
 
 	public function test_extract_idempotency_key_from_header_removes_body_param_from_request() {
 
+		$this->markTestSkipped( '#40344' );
+
 		wp_set_current_user( 1 );
 		$user = wp_get_current_user();
 
