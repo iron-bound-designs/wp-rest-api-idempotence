@@ -13,7 +13,7 @@
   "require": {
     "ironbound/db": "^2.0.0",
     "yoast/whip": "^1.0.0",
-    "php": ">=5.3.29|>=7.0.1",
+    "php": ">=5.4.0|>=7.0.1",
     "php-di/php-di": "^4.0.0"
   },
   "require-dev": {
@@ -27,7 +27,7 @@
   },
   "config": {
     "platform": {
-      "php": "5.3.29"
+      "php": "5.4.0"
     }
   }
 }
