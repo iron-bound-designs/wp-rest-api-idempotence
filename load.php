@@ -27,17 +27,23 @@ do_action( 'wp_api_idempotence_initialize_container_builder', $builder );
 
 $container = $builder->build();
 
-$data_store = $container->get( 'dataStore' );
-
-if ( $data_store instanceof \IronBound\WP_API_Idempotence\DataStore\Configurable ) {
-	$data_store->configure( $container->get( 'config' ) );
-}
+/**
+ * Fires when the DI container is initialized.
+ *
+ * @since 1.0.0
+ *
+ * @param \DI\Container $container
+ */
+do_action( 'wp_api_idempotence_initialize_container', $container );
 
 /** @var \IronBound\WP_API_Idempotence\Middleware $middleware */
 $middleware = $container->make( '\IronBound\WP_API_Idempotence\Middleware' );
 $middleware->filters();
 
-register_activation_hook( WP_API_IDEMPOTENCE_FILE, function () use ( $data_store ) {
+register_activation_hook( WP_API_IDEMPOTENCE_FILE, function () use ( $container ) {
+
+	$data_store = $container->get( 'dataStore' );
+
 	if ( $data_store instanceof \IronBound\WP_API_Idempotence\DataStore\Installable ) {
 		$data_store->install();
 	}
@@ -45,6 +51,7 @@ register_activation_hook( WP_API_IDEMPOTENCE_FILE, function () use ( $data_store
 	wp_schedule_event( time(), 'daily', 'wp_api_idempotence_flush_logs' );
 } );
 
-add_action( 'wp_api_idempotence_flush_logs', function () use ( $data_store ) {
+add_action( 'wp_api_idempotence_flush_logs', function () use ( $container ) {
+	$data_store = $container->get( 'dataStore' );
 	$data_store->drop_old();
 } );

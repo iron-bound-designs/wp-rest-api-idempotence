@@ -14,8 +14,18 @@ return [
 
 	'wpdb' => DI\factory( function () { return $GLOBALS['wpdb']; } ),
 
-	'responseSerializer' => DI\object( 'IronBound\WP_API_Idempotence\ResponseSerializer\JSON' ),
+	'config'             => DI\link( 'IronBound\WP_API_Idempotence\Config' ),
+	'dataStore'          => DI\factory( function ( \Interop\Container\ContainerInterface $container ) {
+		$ds = $container->get( 'IronBound\WP_API_Idempotence\DataStore\DataStore' );
+
+		if ( $ds instanceof \IronBound\WP_API_Idempotence\DataStore\Configurable ) {
+			$ds->configure( $container->get( 'config' ) );
+		}
+
+		return $ds;
+	} ),
 	'requestHasher'      => DI\object( 'IronBound\WP_API_Idempotence\RequestHasher\Simple' ),
+	'responseSerializer' => DI\object( 'IronBound\WP_API_Idempotence\ResponseSerializer\JSON' ),
 
 	'IronBound\WP_API_Idempotence\RequestHasher\RequestHasher' =>
 		DI\object( 'IronBound\WP_API_Idempotence\RequestHasher\Cached' )
@@ -47,6 +57,4 @@ return [
 		return \IronBound\WP_API_Idempotence\Config::from_settings( [] );
 	} ),
 
-	'dataStore' => DI\link( 'IronBound\WP_API_Idempotence\DataStore\DataStore' ),
-	'config'    => DI\link( 'IronBound\WP_API_Idempotence\Config' ),
 ];

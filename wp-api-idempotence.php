@@ -28,5 +28,14 @@ if ( version_compare( PHP_VERSION, '5.4', '<' ) ) {
 } else {
 	define( 'WP_API_IDEMPOTENCE_FILE', __FILE__ );
 
-	require_once dirname( __FILE__ ) . '/load.php';
+	/**
+     * Load the plugin on plugins loaded.
+     *
+	 * @since 1.0.0
+	 */
+	function ironbound_wp_rest_api_idempotence_load_plugin() {
+		require_once dirname( __FILE__ ) . '/load.php';
+    }
+
+	add_action( 'plugins_loaded', 'ironbound_wp_rest_api_idempotence_load_plugin' );
 }
