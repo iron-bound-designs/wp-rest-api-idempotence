@@ -120,6 +120,15 @@ final class Middleware {
 			}
 
 			$response = $this->poller->poll( $this->data_store, $idempotent_request );
+
+			if ( ! $response ) {
+				return new \WP_Error(
+					'rest_retry_idempotent_request',
+					__( 'Please retry this request in a few minutes.', 'wp-api-idempotence' ),
+					[ 'status' => 500 ]
+				);
+			}
+
 		} catch ( DuplicateIdempotentKeyException $e ) {
 			return new \WP_Error( 'rest_duplicate_idempotency_key', $e->getMessage(), [ 'status' => 400 ] );
 		} catch ( Exception $e ) {

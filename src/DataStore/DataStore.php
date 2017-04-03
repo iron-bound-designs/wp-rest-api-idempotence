@@ -26,6 +26,9 @@ interface DataStore {
 	/**
 	 * Get the stored response for a given request.
 	 *
+	 * If there is no response, but a request is already in process, this function will set
+	 * IdempotentRequest::is_in_progress() to true.
+	 *
 	 * @since 1.0.0
 	 *
 	 * @param IdempotentRequest $request
@@ -41,6 +44,8 @@ interface DataStore {
 	/**
 	 * Start an idempotent request.
 	 *
+	 * This will not alter the IdempotentRequest::is_in_progress() state.
+	 *
 	 * @since 1.0.0
 	 *
 	 * @param IdempotentRequest $request
@@ -52,6 +57,9 @@ interface DataStore {
 
 	/**
 	 * Either get the stored response for a given request or start a request if not started.
+	 *
+	 * If there is no response, but a request is already in process, this function will set
+	 * IdempotentRequest::is_in_progress() to true.
 	 *
 	 * @since 1.0.0
 	 *
@@ -67,6 +75,8 @@ interface DataStore {
 
 	/**
 	 * Finish an idempotent request by storing its response.
+	 *
+	 * If the response is already saved for this request, the ::finish() call will be ignored.
 	 *
 	 * @since 1.0.0
 	 *

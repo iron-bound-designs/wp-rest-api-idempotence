@@ -14,7 +14,7 @@ $builder = new \DI\ContainerBuilder();
 $builder->useAutowiring( true );
 $builder->useAnnotations( false );
 $builder->setDefinitionCache( new \Doctrine\Common\Cache\ArrayCache() );
-$builder->addDefinitions( __DIR__ . '/config.php' );
+$builder->addDefinitions( __DIR__ . '/container.php' );
 
 /**
  * Fires when a container builder is finished being initialized.

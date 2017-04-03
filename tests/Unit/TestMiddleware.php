@@ -166,6 +166,41 @@ class TestMiddleware extends TestCase {
 		$this->assertEquals( $response, $returned );
 	}
 
+	public function test_error_returned_if_polling_failed() {
+
+		wp_set_current_user( 1 );
+		$user = wp_get_current_user();
+
+		$request = new \WP_REST_Request();
+		$request->set_method( 'POST' );
+		$request->add_header( 'X-WP-Idempotency-Key', 'key' );
+		$i_request = new IdempotentRequest( 'key', $request, $user );
+
+		$store = $this->getMockBuilder( 'IronBound\WP_API_Idempotence\DataStore\DataStore' )
+		              ->setMethods( [ 'get_or_start' ] )->getMockForAbstractClass();
+		$store->expects( $this->once() )->method( 'get_or_start' )->with( $i_request )
+		      ->willReturnCallback( function () use ( $i_request ) {
+			      $i_request->set_in_progress( true );
+
+			      return null;
+		      } );
+
+		$factory = $this->getMockBuilder( 'IronBound\WP_API_Idempotence\IdempotentRequestFactory' )
+		                ->setMethods( [ 'make' ] )->getMockForAbstractClass();
+		$factory->expects( $this->once() )->method( 'make' )->with( 'key', $request, $user )->willReturn( $i_request );
+
+		$poller = $this->getMockBuilder( 'IronBound\WP_API_Idempotence\RequestPoller\RequestPoller' )
+		               ->setMethods( [ 'poll' ] )->getMockForAbstractClass();
+		$poller->expects( $this->once() )->method( 'poll' )->with( $store, $i_request )->willReturn( null );
+
+		$middleware = new Middleware( $poller, $store, $factory, Config::from_settings( [] ) );
+
+		$returned = $middleware->pre_dispatch( null, rest_get_server(), $request );
+
+		$this->assertWPError( $returned );
+		$this->assertEquals( 'rest_retry_idempotent_request', $returned->get_error_code() );
+	}
+
 	public function test_response_ignored_for_non_applicable_methods_post_dispatch() {
 
 		$middleware = new Middleware(

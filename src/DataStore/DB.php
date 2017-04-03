@@ -107,7 +107,7 @@ final class DB implements DataStore, Installable, Configurable {
 
 		$model = $this->get_model( $request );
 
-		if ( ! $model ) {
+		if ( ! $model || $model->response ) {
 			return;
 		}
 
