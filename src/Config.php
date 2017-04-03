@@ -44,7 +44,7 @@ final class Config {
 
 		$settings = wp_parse_args( $settings, [
 			'key_location'       => self::LOCATION_HEADER,
-			'key_name'           => 'WP-Idempotence-Key',
+			'key_name'           => 'WP-Idempotency-Key',
 			'applicable_methods' => [ 'POST', 'PUT', 'PATCH' ],
 		] );
 
@@ -79,7 +79,7 @@ final class Config {
 	public function set_key_location( $key_location ) {
 
 		if ( ! array_key_exists( $key_location, static::key_locations() ) ) {
-			throw new \InvalidArgumentException( 'Non-supported idempotent key location.' );
+			throw new \InvalidArgumentException( 'Non-supported idempotency key location.' );
 		}
 
 		$this->key_location = $key_location;

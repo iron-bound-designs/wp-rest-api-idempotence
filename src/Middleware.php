@@ -80,15 +80,15 @@ final class Middleware {
 			return $response;
 		}
 
-		$idempotence_key = $this->extract_idempotent_key( $request );
+		$idempotency_key = $this->extract_idempotency_key( $request );
 
-		if ( ! $idempotence_key ) {
+		if ( ! $idempotency_key ) {
 			return null;
 		}
 
 		$user = wp_get_current_user() ?: null;
 
-		$idempotent_request = $this->factory->make( $idempotence_key, $request, $user );
+		$idempotent_request = $this->factory->make( $idempotency_key, $request, $user );
 
 		try {
 
@@ -104,7 +104,7 @@ final class Middleware {
 
 			$response = $this->poller->poll( $this->data_store, $idempotent_request );
 		} catch ( DuplicateIdempotentKeyException $e ) {
-			return new \WP_Error( 'rest_duplicate_idempotent_key', $e->getMessage(), [ 'status' => 400 ] );
+			return new \WP_Error( 'rest_duplicate_idempotency_key', $e->getMessage(), [ 'status' => 400 ] );
 		} catch ( Exception $e ) {
 			return new \WP_Error(
 				'rest_internal_error',
@@ -133,15 +133,15 @@ final class Middleware {
 			return $response;
 		}
 
-		$idempotence_key = $this->extract_idempotent_key( $request );
+		$idempotency_key = $this->extract_idempotency_key( $request );
 
-		if ( ! $idempotence_key ) {
+		if ( ! $idempotency_key ) {
 			return $response;
 		}
 
 		$user = wp_get_current_user() ?: null;
 
-		$idempotent_request = $this->factory->make( $idempotence_key, $request, $user );
+		$idempotent_request = $this->factory->make( $idempotency_key, $request, $user );
 		$idempotent_request->set_response( $response );
 
 		$this->data_store->finish( $idempotent_request );
@@ -158,7 +158,7 @@ final class Middleware {
 	 *
 	 * @return string
 	 */
-	protected function extract_idempotent_key( \WP_REST_Request $request ) {
+	protected function extract_idempotency_key( \WP_REST_Request $request ) {
 
 		switch ( $this->config->get_key_location() ) {
 			case Config::LOCATION_HEADER:
