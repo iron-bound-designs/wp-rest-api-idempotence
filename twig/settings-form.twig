@@ -1,0 +1,17 @@
+{% if notices.errors %}
+    <div class="notice notice-error">
+        {% for notice in notices.errors %}
+            <p>{{ notice }}</p>
+        {% endfor %}
+    </div>
+{% endif %}
+
+{% if notices.success %}
+    <div class="notice notice-success">
+        {% for notice in notices.success %}
+            <p>{{ notice }}</p>
+        {% endfor %}
+    </div>
+{% endif %}
+
+{{ form|raw }}

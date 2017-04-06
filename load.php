@@ -36,22 +36,10 @@ $container = $builder->build();
  */
 do_action( 'wp_api_idempotence_initialize_container', $container );
 
-/** @var \IronBound\WP_API_Idempotence\Middleware $middleware */
-$middleware = $container->make( '\IronBound\WP_API_Idempotence\Middleware' );
-$middleware->initialize();
+/** @var \IronBound\WP_API_Idempotence\Plugin $plugin */
+$plugin = $container->make( '\IronBound\WP_API_Idempotence\Plugin' );
+$plugin->initialize();
 
-register_activation_hook( WP_API_IDEMPOTENCE_FILE, function () use ( $container ) {
-
-	$data_store = $container->get( 'dataStore' );
-
-	if ( $data_store instanceof \IronBound\WP_API_Idempotence\DataStore\Installable ) {
-		$data_store->install();
-	}
-
-	wp_schedule_event( time(), 'daily', 'wp_api_idempotence_flush_logs' );
-} );
-
-add_action( 'wp_api_idempotence_flush_logs', function () use ( $container ) {
-	$data_store = $container->get( 'dataStore' );
-	$data_store->drop_old();
+register_activation_hook( WP_API_IDEMPOTENCE_FILE, function () use ( $container, $plugin ) {
+	$plugin->activate();
 } );

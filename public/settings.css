@@ -1,0 +1,14 @@
+.wp-api-idempotence-settings .field {
+    padding: 10px 5px;
+    display: block;
+}
+
+.wp-api-idempotence-settings .label {
+    font-weight: bold;
+    display: block;
+    padding-bottom: 5px;
+}
+
+.wp-api-idempotence-settings div.field:last-of-type {
+    padding-bottom: 0;
+}

@@ -207,4 +207,15 @@ final class Middleware {
 
 		return $key ?: '';
 	}
+
+	/**
+	 * Get the data store powering this middleware.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return DataStore
+	 */
+	public function get_data_store() {
+		return $this->data_store;
+	}
 }
