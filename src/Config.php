@@ -29,6 +29,9 @@ final class Config {
 	/** @var string[] */
 	private $applicable_methods = [];
 
+	/** @var bool */
+	private $allow_logged_out_users = false;
+
 	/**
 	 * Build a Config object from the stored settings.
 	 *
@@ -58,9 +61,10 @@ final class Config {
 	public function set_settings( array $settings ) {
 
 		$settings = wp_parse_args( $settings, [
-			'key_location'       => self::LOCATION_HEADER,
-			'key_name'           => 'WP-Idempotency-Key',
-			'applicable_methods' => [ 'POST', 'PUT', 'PATCH' ],
+			'key_location'           => self::LOCATION_HEADER,
+			'key_name'               => 'WP-Idempotency-Key',
+			'applicable_methods'     => [ 'POST', 'PUT', 'PATCH' ],
+			'allow_logged_out_users' => false,
 		] );
 
 		$this->set_key_location( $settings['key_location'] );
@@ -139,6 +143,28 @@ final class Config {
 	 */
 	public function set_applicable_methods( array $applicable_methods ) {
 		$this->applicable_methods = $applicable_methods;
+	}
+
+	/**
+	 * Are logged-out users allowed to use idempotency keys.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return bool
+	 */
+	public function are_logged_out_users_allowed() {
+		return $this->allow_logged_out_users;
+	}
+
+	/**
+	 * Set whether a logged-out user can use idempotency keys.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param bool $allow_logged_out_users
+	 */
+	public function set_allow_logged_out_users( $allow_logged_out_users ) {
+		$this->allow_logged_out_users = (bool) $allow_logged_out_users;
 	}
 
 	/**

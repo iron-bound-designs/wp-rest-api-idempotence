@@ -75,7 +75,7 @@ class Plugin {
 		add_action( 'init', [ $this->dependency_manager, 'register' ] );
 		add_filter( 'option_wp_api_idempotence', [ $this, 'apply_default_settings' ] );
 		add_filter( 'default_option_wp_api_idempotence', [ $this, 'apply_default_settings' ] );
-		add_action( 'update_option_wp_api_idempotence', [ $this, 'update_config_on_settings_updated'], 10, 2 );
+		add_action( 'update_option_wp_api_idempotence', [ $this, 'update_config_on_settings_updated' ], 10, 2 );
 
 		$this->middleware->initialize();
 
@@ -99,9 +99,10 @@ class Plugin {
 	 */
 	public function apply_default_settings( $settings = [] ) {
 		return wp_parse_args( is_array( $settings ) ? $settings : [], [
-			'key_location'       => 'header',
-			'key_name'           => 'WP-Idempotency-Key',
-			'applicable_methods' => [ 'POST', 'PUT', 'PATCH' ],
+			'key_location'           => 'header',
+			'key_name'               => 'WP-Idempotency-Key',
+			'applicable_methods'     => [ 'POST', 'PUT', 'PATCH' ],
+			'allow_logged_out_users' => false,
 		] );
 	}
 

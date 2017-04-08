@@ -105,6 +105,14 @@ final class Middleware {
 
 		$user = wp_get_current_user() ?: null;
 
+		if ( ! $user && ! $this->config->are_logged_out_users_allowed() ) {
+			return new \WP_Error(
+				'rest_invalid_idempotency_key',
+				__( 'Idempotency keys are not allowed for logged-out users.', 'wp-api-idempotence' ),
+				[ 'status' => 400 ]
+			);
+		}
+
 		$idempotent_request = $this->factory->make( $idempotency_key, $request, $user );
 
 		try {
@@ -174,6 +182,10 @@ final class Middleware {
 		}
 
 		$user = wp_get_current_user() ?: null;
+
+		if ( ! $user && ! $this->config->are_logged_out_users_allowed() ) {
+			return $response;
+		}
 
 		$idempotent_request = $this->factory->make( $idempotency_key, $request, $user );
 		$idempotent_request->set_response( $response );
