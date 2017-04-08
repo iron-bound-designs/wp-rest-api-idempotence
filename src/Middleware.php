@@ -169,6 +169,10 @@ final class Middleware {
 			}
 		}
 
+		if ( is_wp_error( $response ) && $response->get_error_code() === 'rest_retry_idempotent_request' ) {
+			return $response;
+		}
+
 		$user = wp_get_current_user() ?: null;
 
 		$idempotent_request = $this->factory->make( $idempotency_key, $request, $user );
