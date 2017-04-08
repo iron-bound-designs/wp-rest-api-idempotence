@@ -1,4 +1,4 @@
-<h2>Sample Requests</h2>
+<h2>{{ l10n.sampleRequests }}</h2>
 
 <div class="sample-request">
 
@@ -13,7 +13,7 @@
         <div class="request-actions-meta-container">
         <pre class="request-header"><span class="request-method">POST</span>&nbsp;<span
                     class="request-route">{{ postsEndpoint }}</span></pre>
-            <span class="request-submit"><button class="button button-secondary">Request</button></span>
+            <span class="request-submit"><button class="button button-secondary">{{ l10n.request }}</button></span>
         </div>
     </div>
 
@@ -22,8 +22,8 @@
     <div id="response-container-template" class="response-container hidden">
         <code class="response-body"></code>
         <span class="response-meta">
-            <span class="response-start">Request: <time></time></span>&nbsp;&ndash;
-            <span class="response-end">Response: <time></time></span>
+            <span class="response-start">{{ l10n.requestTime }}: <time></time></span>&nbsp;&ndash;
+            <span class="response-end">{{ l10n.resposnseTime }}: <time></time></span>
         </span>
     </div>
 </div>
