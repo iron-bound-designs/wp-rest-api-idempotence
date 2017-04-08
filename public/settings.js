@@ -1,5 +1,7 @@
 (function ( $, settings ) {
 
+	var postID;
+
 	$( function () {
 
 		var $responseContainers = $( '.response-containers' ), $submitButton = $( '.request-submit' ),
@@ -35,6 +37,18 @@
 			} );
 		} );
 
+		$( window ).unload( function () {
+			if ( postID ) {
+
+				var route = settings.restRoute, position = route.indexOf( '?' );
+				route = route.substr( 0, position ) + '/' + postID + route.substr( position ) + '&force=true';
+
+				$.ajax( route, {
+					method: 'DELETE',
+					async : false,
+				} );
+			}
+		 } );
 	} );
 
 	function makeSampleRequest() {
@@ -55,6 +69,11 @@
 				}
 			},
 			success    : function ( response ) {
+
+				if ( response.id ) {
+					postID = response.id;
+				}
+
 				deferred.resolve( {
 					response: response,
 					start   : now,
