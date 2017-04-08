@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: WP REST API - Idempotence
-Plugin URI: https://timothybjacobs.com
+Plugin URI: https://timothybjacobs.com/wp-api-idempotence/
 Description: Allow API clients to specify an idempotency key for API requests.
 Version: 1.0
 Author: Timothy B Jacobs

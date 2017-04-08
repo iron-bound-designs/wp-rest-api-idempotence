@@ -59,8 +59,8 @@ the request, not for the object via `spl_object_hash` or similar. This can also 
 
 The `ResponseSerializer` converts a `WP_REST_Response` or `WP_Error` object back and forth from a string representation.
 The default JSON serializer supports filtering the serialization process using the `wp_api_idempotence_serialized_response_data`
-and `filters`. See `src/ResponseSerializer/Filtered.php`. The entire serializer can be substituted by implementing
-the `ResponseSerializer` interface.
+and `wp_api_idempotence_attach_serialized_response_data` filters. See `src/ResponseSerializer/Filtered.php`.
+The entire serializer can be substituted by implementing the `ResponseSerializer` interface.
 
 Finally, the `RequestPoller` class polls the data store for a response if it is determined that an idempotent request
 is currently being processed when another request with the same key arrives. By default, the data store is polled
