@@ -10,6 +10,7 @@
 
 namespace IronBound\WP_API_Idempotence\DataStore;
 
+use IronBound\DB\Exception as DBException;
 use IronBound\DB\Manager;
 use IronBound\WP_API_Idempotence\Config;
 use IronBound\WP_API_Idempotence\Exception\DuplicateIdempotentKeyException;
@@ -35,6 +36,9 @@ final class DB implements DataStore, Installable, Configurable {
 	/** @var \wpdb */
 	private $wpdb;
 
+	/** @var Table */
+	private $table;
+
 	/**
 	 * IronBoundDataStore constructor.
 	 *
@@ -46,6 +50,7 @@ final class DB implements DataStore, Installable, Configurable {
 		$this->request_hasher      = $request_hasher;
 		$this->response_serializer = $response_serializer;
 		$this->wpdb                = $wpdb;
+		$this->table               = new Table();
 	}
 
 	/**
@@ -76,12 +81,33 @@ final class DB implements DataStore, Installable, Configurable {
 	 * @inheritDoc
 	 */
 	public function start( IdempotentRequest $request ) {
-		Model::create( array(
-			'user'         => $request->get_user() ? $request->get_user()->ID : 0,
-			'ikey'         => $request->get_idempotency_key(),
-			'request_hash' => $this->request_hasher->hash( $request ),
-			'method'       => $request->get_request()->get_method(),
-		) );
+
+		$table = $this->table;
+		$tn    = $table->get_table_name( $this->wpdb );
+
+		$prev = $this->wpdb->show_errors( false );
+
+		$this->wpdb->query(
+			$this->wpdb->prepare(
+				"INSERT INTO {$tn} (`user`,ikey,request_hash,method) VALUES(%d,%s,%s,%s) ON DUPLICATE KEY UPDATE ikey = ikey",
+				$request->get_user() ? $request->get_user()->ID : 0,
+				$request->get_idempotency_key(),
+				$this->request_hasher->hash( $request ),
+				$request->get_request()->get_method()
+			)
+		);
+		$this->wpdb->show_errors( $prev );
+
+		if ( $this->wpdb->last_error ) {
+
+			if ( $this->wpdb->use_mysqli ) {
+				$error_number = mysqli_errno( $this->wpdb->dbh );
+			} else {
+				$error_number = mysql_errno( $this->wpdb->dbh );
+			}
+
+			return new DBException( $this->wpdb->last_error, $error_number );
+		}
 	}
 
 	/**
@@ -134,7 +160,7 @@ final class DB implements DataStore, Installable, Configurable {
 
 		$wpdb = $this->wpdb;
 
-		$table = Model::table();
+		$table = $this->table;
 
 		if ( $hours ) {
 			$now = new \DateTime( 'now', new \DateTimeZone( 'UTC' ) );
@@ -193,15 +219,13 @@ final class DB implements DataStore, Installable, Configurable {
 	 * @inheritDoc
 	 */
 	public function install() {
-		$table = new Table();
-
-		Manager::maybe_install_table( $table );
+		Manager::maybe_install_table( $this->table );
 	}
 
 	/**
 	 * @inheritDoc
 	 */
 	public function configure( Config $config ) {
-		Manager::register( new Table(), '', '\IronBound\WP_API_Idempotence\Helpers\Model' );
+		Manager::register( $this->table, '', '\IronBound\WP_API_Idempotence\Helpers\Model' );
 	}
 }
