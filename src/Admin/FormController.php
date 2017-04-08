@@ -13,43 +13,44 @@ namespace IronBound\WP_API_Idempotence\Admin;
 use Gregwar\Formidable\Form;
 
 /**
- * Class FormView
+ * Class FormController
  *
  * @package IronBound\WP_API_Idempotence\Admin
  */
-class FormController extends Controller {
+class FormController extends Controller implements WithForm, WithPreEval {
 
 	/** @var Form */
 	private $form;
 
 	/** @var array */
-	private $security;
+	private $config;
 
-	/** @var callable */
-	private $save;
+	/** @var array */
+	private $notices = [];
 
 	/**
-	 * @inheritDoc
+	 * @inheritdoc
 	 */
-	public function __construct( \Twig_TemplateWrapper $view, $subviews, Form $form, array $security, callable $save ) {
-		parent::__construct( $view, $subviews );
-
-		$this->form     = $form;
-		$this->security = $security;
-		$this->save     = $save;
+	public function set_form( Form $form, array $config ) {
+		$this->form   = $form;
+		$this->config = $config;
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function __invoke() {
+	public function pre_eval() {
 
-		$notices = [];
+		if ( ! $this->form || ! $this->config ) {
+			return;
+		}
+
+		$notices = $this->notices;
 
 		$this->form->handle( function () use ( &$notices ) {
 
 			$values   = $this->form->getValues();
-			$security = $this->security;
+			$security = $this->config['security'];
 
 			if ( isset( $security['nonceField'] ) ) {
 				unset( $values[ $security['nonceField'] ] );
@@ -61,16 +62,36 @@ class FormController extends Controller {
 				return;
 			}
 
-			call_user_func( $this->save, $values );
+			if ( $this->config['storage']['type'] === 'options' ) {
+				update_option( $this->config['storage']['option'], $values );
+			}
 
 			$notices['success'][] = __( 'Saved', 'wp-api-idempotence' );
 		}, function ( $errors = [] ) use ( &$notices ) {
 			$notices['errors'] = $errors;
 		} );
 
-		return $this->view->render( [
-			'form'    => $this->form,
-			'notices' => $notices,
-		] );
+		$this->notices = $notices;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function __invoke() {
+
+		if ( ! $this->form || ! $this->config ) {
+			return '';
+		}
+
+		return $this->view->render( array_merge( [ 'notices' => $this->notices ], $this->make_twig_context() ) );
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	protected function make_twig_context() {
+		return [
+			'form' => $this->form,
+		];
 	}
 }

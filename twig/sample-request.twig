@@ -1,0 +1,29 @@
+<h2>Sample Requests</h2>
+
+<div class="sample-request">
+
+    <div class="request-container">
+
+        <code id="request-body">{{ requestJson }}</code>
+
+        {% if key.location == 'header' %}
+            <pre class="key-header request-header" data-key="{{ uuid }}" data-name="{{ key.name }}">X-{{ key.name }}: {{ uuid }}</pre>
+        {% endif %}
+
+        <div class="request-actions-meta-container">
+        <pre class="request-header"><span class="request-method">POST</span>&nbsp;<span
+                    class="request-route">{{ postsEndpoint }}</span></pre>
+            <span class="request-submit"><button class="button button-secondary">Request</button></span>
+        </div>
+    </div>
+
+    <div class="response-containers"></div>
+
+    <div id="response-container-template" class="response-container hidden">
+        <code class="response-body"></code>
+        <span class="response-meta">
+            <span class="response-start">Request: <time></time></span>&nbsp;&ndash;
+            <span class="response-end">Response: <time></time></span>
+        </span>
+    </div>
+</div>

@@ -38,9 +38,20 @@ class Controller {
 	 * @inheritDoc
 	 */
 	public function __invoke() {
-		return $this->view->render( [
+		return $this->view->render( $this->make_twig_context() );
+	}
+
+	/**
+	 * Make context to pass to Twig.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return array
+	 */
+	protected function make_twig_context() {
+		return [
 			'subviews' => $this->subviews,
-		] );
+		];
 	}
 
 	/**
@@ -48,5 +59,16 @@ class Controller {
 	 */
 	public function __toString() {
 		return $this();
+	}
+
+	/**
+	 * Get any subviews this controller contains.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return Controller[]
+	 */
+	public function get_subviews() {
+		return $this->subviews;
 	}
 }

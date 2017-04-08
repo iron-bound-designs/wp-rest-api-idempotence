@@ -30,17 +30,22 @@ class Plugin {
 	/** @var DependencyManagerInterface */
 	private $dependency_manager;
 
+	/** @var Config */
+	private $config;
+
 	/**
 	 * Plugin constructor.
 	 *
 	 * @param Middleware                 $middleware
 	 * @param Dispatcher                 $dispatcher
 	 * @param DependencyManagerInterface $dependency_manager
+	 * @param Config                     $config
 	 */
-	public function __construct( Middleware $middleware, Dispatcher $dispatcher, DependencyManagerInterface $dependency_manager ) {
+	public function __construct( Middleware $middleware, Dispatcher $dispatcher, DependencyManagerInterface $dependency_manager, Config $config ) {
 		$this->middleware         = $middleware;
 		$this->dispatcher         = $dispatcher;
 		$this->dependency_manager = $dependency_manager;
+		$this->config             = $config;
 	}
 
 	/**
@@ -70,6 +75,7 @@ class Plugin {
 		add_action( 'init', [ $this->dependency_manager, 'register' ] );
 		add_filter( 'option_wp_api_idempotence', [ $this, 'apply_default_settings' ] );
 		add_filter( 'default_option_wp_api_idempotence', [ $this, 'apply_default_settings' ] );
+		add_action( 'update_option_wp_api_idempotence', [ $this, 'update_config_on_settings_updated'], 10, 2 );
 
 		$this->middleware->initialize();
 
@@ -97,6 +103,18 @@ class Plugin {
 			'key_name'           => 'WP-Idempotency-Key',
 			'applicable_methods' => [ 'POST', 'PUT', 'PATCH' ],
 		] );
+	}
+
+	/**
+	 * Update the config instance when the settings are saved.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array $_
+	 * @param array $settings
+	 */
+	public function update_config_on_settings_updated( $_, $settings ) {
+		$this->config->set_settings( $settings );
 	}
 
 	/**

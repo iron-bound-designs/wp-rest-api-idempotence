@@ -12,3 +12,87 @@
 .wp-api-idempotence-settings div.field:last-of-type {
     padding-bottom: 0;
 }
+
+.sample-request {
+    display: flex;
+}
+
+.sample-request .request-container,
+.sample-request .response-containers {
+    width: 50%;
+}
+
+.sample-request .request-container {
+    padding: 0 10px 0 0;
+}
+
+.sample-request .response-containers {
+    padding: 0 0 0 10px;
+}
+
+.sample-request code {
+    width: 100%;
+    display: inline-block;
+    white-space: pre;
+    padding: 20px 20px 20px 30px;
+    box-sizing: border-box;
+    -ms-word-wrap: break-word;
+    word-wrap: break-word;
+}
+
+.sample-request .request-header {
+    margin: 0;
+    padding-top: 10px;
+}
+
+.sample-request .request-actions-meta-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-items: center;
+}
+
+.sample-request .request-actions-meta-container .request-header {
+    display: inline-block;
+    padding-top: 10px;
+}
+
+.sample-request .request-actions-meta-container .request-submit {
+    display: inline-block;
+    flex-grow: 1;
+    text-align: right;
+    padding-top: 10px;
+}
+
+.sample-request .response-container {
+    margin-bottom: 15px;
+}
+
+.sample-request .response-container code {
+    height: 150px;
+    overflow: scroll;
+}
+
+.sample-request .response-container .response-meta {
+    font-style: oblique;
+}
+
+@media screen and (max-width: 960px) {
+    .sample-request {
+        flex-direction: column;
+    }
+
+    .sample-request .request-container,
+    .sample-request .response-containers {
+        width: 100%;
+    }
+
+    .sample-request .request-container {
+        padding: 0;
+    }
+
+    .sample-request .response-containers {
+        padding: 10px 0 0 0;
+    }
+}

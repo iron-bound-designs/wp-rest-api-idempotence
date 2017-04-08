@@ -64,7 +64,7 @@ class Dispatcher {
 	protected function do_register_view( $name, array $config ) {
 		if ( isset( $config['menu'] ) ) {
 			$this->register_menu( $name, $config['menu'], function () use ( $name, $config ) {
-				return $this->view_factory->make( $config['type'], $name, $config );
+				return $this->view_factory->make( $name, $config );
 			} );
 		}
 	}
@@ -76,13 +76,17 @@ class Dispatcher {
 	 *
 	 * @param string   $name
 	 * @param array    $config
-	 * @param callable $make_view
+	 * @param callable $make_controller
 	 */
-	protected function register_menu( $name, array $config, callable $make_view ) {
+	protected function register_menu( $name, array $config, callable $make_controller ) {
 
-		add_action( 'admin_menu', function () use ( $name, $config, $make_view ) {
+		add_action( 'admin_menu', function () use ( $name, $config, $make_controller ) {
 
-			$render = function () use ( $make_view ) { echo $make_view(); };
+			$render = function () use ( $make_controller ) {
+				$controller = $make_controller();
+				$this->handle_pre_eval( $controller );
+				echo $controller;
+			};
 
 			$slug = "wp-api-idempotence-{$name}";
 
@@ -111,5 +115,23 @@ class Dispatcher {
 				);
 			}
 		} );
+	}
+
+	/**
+	 * Call all pre-eval functions before rendering.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param Controller $controller
+	 */
+	protected function handle_pre_eval( Controller $controller ) {
+
+		if ( $controller instanceof WithPreEval ) {
+			$controller->pre_eval();
+		}
+
+		foreach ( $controller->get_subviews() as $subview ) {
+			$this->handle_pre_eval( $subview );
+		}
 	}
 }

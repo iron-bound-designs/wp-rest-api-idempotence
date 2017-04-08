@@ -8,6 +8,7 @@ return [
 		],
 		'path'     => 'settings.twig',
 		'type'     => 'html',
+		'class'    => 'IronBound\WP_API_Idempotence\Admin\SettingsController',
 		'subviews' => [
 			'form' => [
 				'type' => 'form',
@@ -27,16 +28,10 @@ return [
 							'body'   => __( 'Request Body', 'wp-api-idempotence' ),
 						],
 					],
-					'values'   => function () {
-						$values = get_option( 'wp_api_idempotence', [] );
-
-						$values['applicable_methods'] = array_flip( $values['applicable_methods'] );
-
-						return $values;
-					},
-					'save'     => function ( $values ) {
-						update_option( 'wp_api_idempotence', $values );
-					},
+					'storage'  => [
+						'type'   => 'options',
+						'option' => 'wp_api_idempotence'
+					],
 					'security' => [
 						'nonceField' => 'nonce',
 						'capability' => 'manage_options',

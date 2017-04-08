@@ -42,18 +42,30 @@ final class Config {
 	 */
 	public static function from_settings( array $settings ) {
 
+		$config = new Config();
+		$config->set_settings( $settings );
+
+		return $config;
+	}
+
+	/**
+	 * Set multiple values from a settings array.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array $settings
+	 */
+	public function set_settings( array $settings ) {
+
 		$settings = wp_parse_args( $settings, [
 			'key_location'       => self::LOCATION_HEADER,
 			'key_name'           => 'WP-Idempotency-Key',
 			'applicable_methods' => [ 'POST', 'PUT', 'PATCH' ],
 		] );
 
-		$config = new Config();
-		$config->set_key_location( $settings['key_location'] );
-		$config->set_key_name( $settings['key_name'] );
-		$config->set_applicable_methods( $settings['applicable_methods'] );
-
-		return $config;
+		$this->set_key_location( $settings['key_location'] );
+		$this->set_key_name( $settings['key_name'] );
+		$this->set_applicable_methods( $settings['applicable_methods'] );
 	}
 
 	/**

@@ -15,15 +15,7 @@ return [
 	'wpdb' => DI\factory( function () { return $GLOBALS['wpdb']; } ),
 
 	'config'             => DI\link( 'IronBound\WP_API_Idempotence\Config' ),
-	'dataStore'          => DI\factory( function ( \Interop\Container\ContainerInterface $container ) {
-		$ds = $container->get( 'IronBound\WP_API_Idempotence\DataStore\DataStore' );
-
-		if ( $ds instanceof \IronBound\WP_API_Idempotence\DataStore\Configurable ) {
-			$ds->configure( $container->get( 'config' ) );
-		}
-
-		return $ds;
-	} ),
+	'dataStore'          => DI\link( 'IronBound\WP_API_Idempotence\DataStore\DataStore' ),
 	'requestHasher'      => DI\object( 'IronBound\WP_API_Idempotence\RequestHasher\Simple' ),
 	'responseSerializer' => DI\object( 'IronBound\WP_API_Idempotence\ResponseSerializer\JSON' ),
 
@@ -54,13 +46,24 @@ return [
 			return $serializer;
 		} ),
 
-	'IronBound\WP_API_Idempotence\DataStore\DataStore' =>
+	'_dataStore' =>
 		DI\object( 'IronBound\WP_API_Idempotence\DataStore\DB' )
 			->constructor(
 				DI\link( 'IronBound\WP_API_Idempotence\RequestHasher\RequestHasher' ),
 				DI\link( 'IronBound\WP_API_Idempotence\ResponseSerializer\ResponseSerializer' ),
 				DI\link( 'wpdb' )
 			),
+
+	'IronBound\WP_API_Idempotence\DataStore\DataStore' =>
+		DI\factory( function ( \Interop\Container\ContainerInterface $container ) {
+			$ds = $container->get( '_dataStore' );
+
+			if ( $ds instanceof \IronBound\WP_API_Idempotence\DataStore\Configurable ) {
+				$ds->configure( $container->get( 'config' ) );
+			}
+
+			return $ds;
+		} ),
 
 	'IronBound\WP_API_Idempotence\Config' => DI\factory( function () {
 		return \IronBound\WP_API_Idempotence\Config::from_settings( get_option( 'wp_api_idempotence' ) ?: [] );

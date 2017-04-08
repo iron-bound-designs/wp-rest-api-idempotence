@@ -10,6 +10,8 @@
 
 namespace IronBound\WP_API_Idempotence\Admin;
 
+use DI\FactoryInterface;
+
 /**
  * Class ViewFactory
  *
@@ -23,15 +25,24 @@ class ControllerFactory {
 	/** @var \Twig_Environment */
 	private $twig;
 
+	/** @var FactoryInterface */
+	private $factory;
+
+	private static $class_map = [
+		'html' => 'IronBound\WP_API_Idempotence\Admin\Controller',
+		'form' => 'IronBound\WP_API_Idempotence\Admin\FormController',
+	];
+
 	/**
 	 * ViewFactory constructor.
 	 *
-	 * @param FormFactory $form_factory
+	 * @param FormFactory       $form_factory
 	 * @param \Twig_Environment $twig
 	 */
-	public function __construct( FormFactory $form_factory, \Twig_Environment $twig ) {
+	public function __construct( FormFactory $form_factory, \Twig_Environment $twig, FactoryInterface $factory ) {
 		$this->form_factory = $form_factory;
 		$this->twig         = $twig;
+		$this->factory      = $factory;
 	}
 
 	/**
@@ -39,35 +50,39 @@ class ControllerFactory {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param string $type
 	 * @param string $name
 	 * @param array  $config
 	 *
 	 * @return Controller
 	 */
-	public function make( $type, $name, array $config ) {
+	public function make( $name, array $config ) {
 
 		$subviews = [];
 
 		if ( isset( $config['subviews'] ) ) {
 			foreach ( $config['subviews'] as $sv_name => $sv_config ) {
-				$subviews[ $sv_name ] = $this->make( $sv_config['type'], $sv_name, $sv_config );
+				$subviews[ $sv_name ] = $this->make( $sv_name, $sv_config );
 			}
 		}
 
-		switch ( $type ) {
-			case 'form':
-				return new FormController(
-					$this->twig->load( $config['path'] ),
-					$subviews,
-					$this->make_form( $name, $config['form'] ),
-					$config['form']['security'],
-					$config['form']['save']
-				);
-			case 'html':
-			default:
-				return new Controller( $this->twig->load( $config['path'] ), $subviews );
+		if ( isset( $config['class'] ) ) {
+			$class = $config['class'];
+		} elseif ( isset( $config['type'], static::$class_map[ $config['type'] ] ) ) {
+			$class = static::$class_map[ $config['type'] ];
+		} else {
+			$class = static::$class_map['html'];
 		}
+
+		$controller = $this->factory->make( $class, [
+			'view'     => $this->twig->load( $config['path'] ),
+			'subviews' => $subviews
+		] );
+
+		if ( $controller instanceof WithForm ) {
+			$controller->set_form( $this->make_form( $name, $config['form'] ), $config['form'] );
+		}
+
+		return $controller;
 	}
 
 	/**
@@ -90,7 +105,9 @@ class ControllerFactory {
 			}
 		}
 
-		$form->setValues( $config['values']() );
+		if ( $config['storage']['type'] === 'options' ) {
+			$form->setValues( get_option( $config['storage']['option'], [] ) );
+		}
 
 		return $form;
 	}
