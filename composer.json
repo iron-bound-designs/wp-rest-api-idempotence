@@ -24,6 +24,12 @@
     "gregwar/formidable": "^1.1",
     "twig/twig": "^1.33"
   },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/TimothyBJacobs/Formidable"
+    }
+  ],
   "require-dev": {
     "phpunit/phpunit": "^4.8|^5.7"
   },

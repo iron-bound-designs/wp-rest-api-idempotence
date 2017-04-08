@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "796c9b857dc8c5d40612a43359a3d320",
+    "content-hash": "27ed9feb3865ecdd6c83c0d3b614c754",
     "packages": [
         {
             "name": "brightnucleus/config",
@@ -659,12 +659,12 @@
             "target-dir": "Gregwar/Formidable",
             "source": {
                 "type": "git",
-                "url": "https://github.com/Gregwar/Formidable.git",
+                "url": "https://github.com/TimothyBJacobs/Formidable.git",
                 "reference": "8c6b5e8029520561dc135250b4747c5163b37ac9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Gregwar/Formidable/zipball/8c6b5e8029520561dc135250b4747c5163b37ac9",
+                "url": "https://api.github.com/repos/TimothyBJacobs/Formidable/zipball/8c6b5e8029520561dc135250b4747c5163b37ac9",
                 "reference": "8c6b5e8029520561dc135250b4747c5163b37ac9",
                 "shasum": ""
             },
@@ -1143,12 +1143,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "c622995d6da98d41ad50b3c5d366b8ebf6491f27"
+                "reference": "dc70f3e826d8783b07eec2997dd3e6ca0b44ad1f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/c622995d6da98d41ad50b3c5d366b8ebf6491f27",
-                "reference": "c622995d6da98d41ad50b3c5d366b8ebf6491f27",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/dc70f3e826d8783b07eec2997dd3e6ca0b44ad1f",
+                "reference": "dc70f3e826d8783b07eec2997dd3e6ca0b44ad1f",
                 "shasum": ""
             },
             "require": {
@@ -1197,7 +1197,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2017-03-22 15:40:48"
+            "time": "2017-04-05 23:23:01"
         },
         {
             "name": "xrstf/composer-php52",
