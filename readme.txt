@@ -41,7 +41,11 @@ The plugin includes two actions to modify the dependency injection container (DI
 The `wp_api_idempotence_initialize_container_builder` action allows you to modify the Dependency Injection builder itself and
 the `wp_api_idempotence_initialize_container` action allows you to override dependencies. For example:
 
-`$container->set( '_dataStore', DI\object( 'YourName\CustomDataStore' ) );`
+```
+add_action( 'wp_api_idempotence_initialize_container', function( $container ) {
+    $container->set( '_dataStore', DI\object( 'YourName\CustomDataStore' ) );
+} );
+```
 
 Under the hood, the plugin is made up of a `DataStore`, `RequestHasher`, `ResponseSerializer` and `RequestPoller`.
 
@@ -65,6 +69,8 @@ every seconds a maximum of 15 times to try and retrieve a response object. If no
 `poll.maxQueries` in the DIC. The `RequestPoller` can also be entirely subsituted by implementing the `RequestPoller`
 interface.
 
+= Contributing =
+This plugin is hosted on [GitHub](https://github.com/iron-bound-designs/wp-api-idempotence). Issues and pull requests are welcomed.
 
 == Installation ==
 
