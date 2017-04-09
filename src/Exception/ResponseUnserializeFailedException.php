@@ -26,7 +26,7 @@ class ResponseUnserializeFailedException extends \UnexpectedValueException imple
 
 		$formatted = sprintf(
 		/* translators: %1$s is the error message. */
-			__( 'Failed to unserialize response: %1$s', 'wp-api-idempotence' ),
+			__( 'Failed to unserialize response: %1$s', 'wp-rest-api-idempotence' ),
 			$message
 		);
 

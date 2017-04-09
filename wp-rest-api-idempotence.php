@@ -19,7 +19,7 @@ if ( version_compare( PHP_VERSION, '5.4', '<' ) ) {
 	function ironbound_wp_rest_api_idempotence_php_version_notice() {
 		?>
         <div class="notice notice-error">
-            <p><?php _e( 'WP REST API - Idempotence requires PHP version 5.4 or greater.', 'wp-api-idempotence' ) ?></p>
+            <p><?php _e( 'WP REST API - Idempotence requires PHP version 5.4 or greater.', 'wp-rest-api-idempotence' ) ?></p>
         </div>
 		<?php
 	}

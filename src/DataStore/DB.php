@@ -106,7 +106,7 @@ final class DB implements DataStore, Installable, Configurable {
 				$error_number = mysql_errno( $this->wpdb->dbh );
 			}
 
-			return new DBException( $this->wpdb->last_error, $error_number );
+			throw new DBException( $this->wpdb->last_error, $error_number );
 		}
 	}
 

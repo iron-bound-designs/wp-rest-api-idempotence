@@ -32,7 +32,7 @@ class RequestHashFailedException extends \UnexpectedValueException implements Ex
 
 		$formatted = sprintf(
 		/* translators: %1$s is the request description. %2$s is the error message. */
-			__( 'Failed to hash %1$s: %2$s', 'wp-api-idempotence' ),
+			__( 'Failed to hash %1$s: %2$s', 'wp-rest-api-idempotence' ),
 			$request,
 			$message
 		);

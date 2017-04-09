@@ -30,7 +30,7 @@ class ResponseSerializeFailedException extends \UnexpectedValueException impleme
 
 		$formatted = sprintf(
 		/* translators: %1$s is the response route. %2$s is the error message. */
-			__( 'Failed to serialize response from %1$s: %2$s', 'wp-api-idempotence' ),
+			__( 'Failed to serialize response from %1$s: %2$s', 'wp-rest-api-idempotence' ),
 			$response->get_matched_route(),
 			$message
 		);

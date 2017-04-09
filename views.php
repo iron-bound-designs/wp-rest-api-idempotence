@@ -24,8 +24,8 @@ return [
 							'DELETE' => 'DELETE',
 						],
 						'key_locations'      => [
-							'header' => __( 'Request Header', 'wp-api-idempotence' ),
-							'body'   => __( 'Request Body', 'wp-api-idempotence' ),
+							'header' => __( 'Request Header', 'wp-rest-api-idempotence' ),
+							'body'   => __( 'Request Body', 'wp-rest-api-idempotence' ),
 						],
 					],
 					'storage'  => [

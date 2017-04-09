@@ -108,7 +108,7 @@ final class Middleware {
 		if ( ! $user && ! $this->config->are_logged_out_users_allowed() ) {
 			return new \WP_Error(
 				'rest_invalid_idempotency_key',
-				__( 'Idempotency keys are not allowed for logged-out users.', 'wp-api-idempotence' ),
+				__( 'Idempotency keys are not allowed for logged-out users.', 'wp-rest-api-idempotence' ),
 				[ 'status' => 400 ]
 			);
 		}
@@ -132,7 +132,7 @@ final class Middleware {
 			if ( ! $response ) {
 				return new \WP_Error(
 					'rest_retry_idempotent_request',
-					__( 'Please retry this request in a few minutes.', 'wp-api-idempotence' ),
+					__( 'Please retry this request in a few minutes.', 'wp-rest-api-idempotence' ),
 					[ 'status' => 500 ]
 				);
 			}
@@ -142,7 +142,7 @@ final class Middleware {
 		} catch ( Exception $e ) {
 			return new \WP_Error(
 				'rest_internal_error',
-				__( 'Internal Server Error', 'wp-api-idempotence' ),
+				__( 'Internal Server Error', 'wp-rest-api-idempotence' ),
 				[ 'status' => 500 ]
 			);
 		}

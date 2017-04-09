@@ -55,10 +55,10 @@ class SettingsController extends Controller {
 			'uuid'          => wp_generate_uuid4(),
 			'requestJson'   => wp_json_encode( $json, JSON_PRETTY_PRINT ),
 			'l10n'          => [
-				'sampleRequests' => __( 'Sample Requests', 'wp-api-idempotence' ),
-				'request'        => _x( 'Request', 'Make the sample REST API request', 'wp-api-idempotence' ),
-				'requestTime'    => _x( 'Request', 'Time the request started at.', 'wp-api-idempotence' ),
-				'responseTime'   => _x( 'Response', 'Time the response ended at.', 'wp-api-idempotence' ),
+				'sampleRequests' => __( 'Sample Requests', 'wp-rest-api-idempotence' ),
+				'request'        => _x( 'Request', 'Make the sample REST API request', 'wp-rest-api-idempotence' ),
+				'requestTime'    => _x( 'Request', 'Time the request started at.', 'wp-rest-api-idempotence' ),
+				'responseTime'   => _x( 'Response', 'Time the response ended at.', 'wp-rest-api-idempotence' ),
 			],
 		] );
 	}

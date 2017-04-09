@@ -226,7 +226,7 @@ class TestMiddleware extends TestCase {
 
 		$error = new \WP_Error(
 			'rest_retry_idempotent_request',
-			__( 'Please retry this request in a few minutes.', 'wp-api-idempotence' ),
+			__( 'Please retry this request in a few minutes.', 'wp-rest-api-idempotence' ),
 			[ 'status' => 500 ]
 		);
 

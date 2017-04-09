@@ -45,7 +45,7 @@ class JSON implements Filterable {
 			);
 		} else {
 			throw new ResponseSerializeFailedException(
-				__( 'Non-standard response object encountered.', 'wp-api-idempotence' ),
+				__( 'Non-standard response object encountered.', 'wp-rest-api-idempotence' ),
 				$response
 			);
 		}
@@ -91,7 +91,7 @@ class JSON implements Filterable {
 			$response->error_data = $data['error_data'];
 		} else {
 			throw new ResponseUnserializeFailedException(
-				__( 'Non-standard response object encountered.', 'wp-api-idempotence' )
+				__( 'Non-standard response object encountered.', 'wp-rest-api-idempotence' )
 			);
 		}
 

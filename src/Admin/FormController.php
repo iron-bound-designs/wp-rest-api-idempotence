@@ -57,7 +57,7 @@ class FormController extends Controller implements WithForm, WithPreEval {
 			}
 
 			if ( isset( $security['capability'] ) && ! current_user_can( $security['capability'] ) ) {
-				$notices['errors'][] = __( "You don't have permission to save this form.", 'wp-api-idempotence' );
+				$notices['errors'][] = __( "You don't have permission to save this form.", 'wp-rest-api-idempotence' );
 
 				return;
 			}
@@ -66,7 +66,7 @@ class FormController extends Controller implements WithForm, WithPreEval {
 				update_option( $this->config['storage']['option'], $values );
 			}
 
-			$notices['success'][] = __( 'Saved', 'wp-api-idempotence' );
+			$notices['success'][] = __( 'Saved', 'wp-rest-api-idempotence' );
 		}, function ( $errors = [] ) use ( &$notices ) {
 			$notices['errors'] = $errors;
 		} );

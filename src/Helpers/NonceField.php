@@ -53,7 +53,7 @@ class NonceField extends Field {
 		$value = $this->value;
 
 		if ( ! wp_verify_nonce( $value, $this->nonce_action ) ) {
-			return __( 'Request Expired. Please try again.', 'wp-api-idempotence' );
+			return __( 'Request Expired. Please try again.', 'wp-rest-api-idempotence' );
 		}
 	}
 

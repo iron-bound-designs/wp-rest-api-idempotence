@@ -130,7 +130,7 @@ final class IdempotentRequest {
 		if ( $this->get_user() ) {
 			return sprintf(
 			/* translators: %1$s is the HTTP method. %2$s is the route. %3$s is the username. */
-				__( '\'%1%s\' request to \'%2$s\' by \'%3$s\'', 'wp-api-idempotence' ),
+				__( '\'%1%s\' request to \'%2$s\' by \'%3$s\'', 'wp-rest-api-idempotence' ),
 				$this->get_request()->get_method(),
 				$this->get_request()->get_route(),
 				$this->get_user()->user_login
@@ -139,7 +139,7 @@ final class IdempotentRequest {
 
 		return sprintf(
 		/* translators: %1$s is the HTTP method. %2$s is the route. */
-			__( '\'%1%s\' request to \'%2$s\'', 'wp-api-idempotence' ),
+			__( '\'%1%s\' request to \'%2$s\'', 'wp-rest-api-idempotence' ),
 			$this->get_request()->get_method(),
 			$this->get_request()->get_route()
 		);

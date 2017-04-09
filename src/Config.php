@@ -176,8 +176,8 @@ final class Config {
 	 */
 	public static function key_locations() {
 		return [
-			self::LOCATION_HEADER => __( 'Request Header', 'wp-api-idempotence' ),
-			self::LOCATION_BODY   => __( 'Request Body', 'wp-api-idempotence' ),
+			self::LOCATION_HEADER => __( 'Request Header', 'wp-rest-api-idempotence' ),
+			self::LOCATION_BODY   => __( 'Request Body', 'wp-rest-api-idempotence' ),
 		];
 	}
 }
