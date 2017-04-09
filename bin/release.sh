@@ -19,13 +19,13 @@
 # ----- START EDITING HERE -----
 
 # The slug of your WordPress.org plugin
-PLUGIN_SLUG="wp-api-idempotence"
+PLUGIN_SLUG="wp-rest-api-idempotence"
 
 # GITHUB user who owns the repo
 GITHUB_REPO_OWNER="iron-bound-designs"
 
 # GITHUB Repository name
-GITHUB_REPO_NAME="wp-api-idempotence"
+GITHUB_REPO_NAME="wp-rest-api-idempotence"
 
 # ----- STOP EDITING HERE -----
 
@@ -139,11 +139,11 @@ echo ""
 # CREATE THE GITHUB RELEASE
 read -p "GITHUB ACCESS TOKEN: " GITHUB_ACCESS_TOKEN
 
-if [ ! -z "$GITHUB_ACCESS_TOKEN" ]
+if [ ! -z "$GITHUB_ACCESS_TOKEN" ]; then
     echo "Creating GITHUB release"
     API_JSON=$(printf '{ "tag_name": "%s","target_commitish": "%s","name": "%s", "body": "Release of version %s", "draft": false, "prerelease": false }' $VERSION $BRANCH $VERSION $VERSION)
     RESULT=$(curl --data "${API_JSON}" https://api.github.com/repos/${GITHUB_REPO_OWNER}/${GITHUB_REPO_NAME}/releases?access_token=${GITHUB_ACCESS_TOKEN})
-endif
+fi
 
 # DEPLOY
 echo ""
